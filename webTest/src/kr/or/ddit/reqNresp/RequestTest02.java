@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sun.xml.internal.ws.api.pipe.Tube;
+
 /**
  * Servlet implementation class RequestTest02
  */
@@ -35,17 +37,38 @@ public class RequestTest02 extends HttpServlet {
 		
 		out.println("<h2>계산 결과</h2><hr>");
 		
-		int result = 0;
+		double result = 0;
+		
+		boolean calcOK = true; // 계산의 성공여부가 저장될 변수
 		
 		switch (calc) {
 		case "+": result = num1+num2; break;
 		case "-": result = num1-num2; break;
 		case "*": result = num1*num2; break;
-		case "/": result = num1/num2; break;
-		case "%": result = num1%num2; break;
+		case "/": 
+			if(num2==0) {
+				calcOK =false;
+			}else {
+				result = (double)num1/num2; 
+			}
+			break;
+		case "%": 
+			if(num2==0) {
+				calcOK =false;
+			}else {
+				result = num1%num2;
+			}
+			 break;
 		}
 		
-		out.println("<p>" + num1 + calc + num2 + " = " + result );
+//		out.println("<p>" + num1 + calc + num2 + " = " + result );
+		 out.printf("%d %s %d = ", num1,calc, num2);
+		 
+		 if(calcOK==true) {
+			 out.println(result);
+		 }else {
+			out.println("게산 불가능");
+		}
 		
 		out.println("</body>");
 		out.println("</html>");
