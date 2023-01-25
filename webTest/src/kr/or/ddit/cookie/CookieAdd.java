@@ -53,6 +53,7 @@ public class CookieAdd extends HttpServlet {
 		
 		out.println("<html>");
 		out.println("<head><meta charset='utf-8'><title>Cookie연습</title></head>");
+		out.println("<body>");
 		out.println("<h2>Cookie 데이터가 저장되었습니다.</h2><br>");
 		out.println("<a href='"+ request.getContextPath() + "/basic/cookie/cookieTest01.jsp" +"'>시작문서로 이동</a>");
 		out.println("</body>");
