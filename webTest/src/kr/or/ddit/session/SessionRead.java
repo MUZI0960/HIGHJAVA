@@ -67,7 +67,7 @@ public class SessionRead extends HttpServlet {
 		out.println("</ol>");
 		
 		out.println("<a href='" + request.getContextPath() + "/basic/session/sessionTest01.jsp'>시작문서로 이동</a>");
-		
+		out.println("</body></html>");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
