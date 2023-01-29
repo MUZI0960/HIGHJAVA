@@ -30,6 +30,8 @@
 	 -->
 	
 	<typeAlias alias="memberVo" type="kr.or.ddit.vo.MemberVO" />
+	<typeAlias alias="lprodVo" type="kr.or.ddit.vo.LprodVO" />
+	<typeAlias alias="fileVo" type="kr.or.ddit.vo.FileInfoVO" />
 	
 	<!-- 
 		DB와 연결을 처리하는 정보 설정하기
@@ -52,6 +54,8 @@
 	-->
 	
 	<sqlMap resource="kr/or/ddit/ibatis/mappers/member-mapper.xml" />
+	<sqlMap resource="kr/or/ddit/ibatis/mappers/lprod-mapper.xml" />
+	<sqlMap resource="kr/or/ddit/ibatis/mappers/fileinfo-mapper.xml" />
 	
 		
 </sqlMapConfig>
