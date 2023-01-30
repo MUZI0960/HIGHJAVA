@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import kr.or.ddit.fileupload.service.FileInfoServiceImpl;
+import kr.or.ddit.fileupload.service.IFileInfoService;
 import kr.or.ddit.vo.FileInfoVO;
 
 /*
@@ -74,8 +77,52 @@ public class FileUpload extends HttpServlet {
 		
 		// 전체 Part객체 갯수만큼 반복 처리
 		for(Part part : request.getParts()) {
+			fileName = extractFileName(part);	
 			
+			// 찾은 파일명이 공백("")이면 이것은 파일이 아닌 일반 파라미터 데이터라는 의미이다.
+			if(!"".equals(fileName)) { // 파일인지 검사
+				// 1개의 Upload파일에 대한 정보를 저장할 VO객체 생성
+				FileInfoVO fvo = new FileInfoVO();
+				fvo.setFile_writer(userName); 	// 작성자를 VO에 셋팅
+				fvo.setOrigin_file_name(fileName);	// 원래의 파일명을 VO에 셋팅
+				
+				// 실제 저장되는 파일 이름이 중복되는 것을 방지하기 위해서 UUID객체를 이용하여 저장할 파일명을 만든다.
+				String saveFileName = UUID.randomUUID().toString();
+				fvo.setSave_file_name(saveFileName);	// 만들어진 저장 파일명을 VO에 셋팅
+				
+				// 전송된 파일의 크기는 Part객체의 getSize()메서드를 이용해서 구한다. (단위 : byte)
+				// byte단위의 파일 크기를 KB단위로 변환해서 VO에 셋팅
+				fvo.setFile_size( (long)Math.ceil(part.getSize()/1024.0));
+				
+				try {
+					// Upload된 파일 저장하기
+					// 형식) Part객체변수.write("경로명/저장할파일명");
+					part.write(uploadPath + File.separator + saveFileName);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				// Upload된 파일 정보가 저장된 VO객체를 List에 추가
+				fileList.add(fvo);
+				
+			} // if문 끝
+			
+		} // for문 끝
+		
+		// Upload된 파일 정보를 DB에 추가하기
+		
+		// Service 객체 생성
+		IFileInfoService service = FileInfoServiceImpl.getInstance();
+		
+		// List에 저장된 파일 정보를 DB에 insert한다.
+		for(FileInfoVO fvo : fileList) {
+			service.insertFileinfo(fvo);
 		}
+		
+		// insert가 모두 완료되면 저장된 파일 목록을 보여준다.
+		response.sendRedirect(request.getContextPath() + "/fileList.do");
+		
 	}	// doPost메서드 끝
 	
 	/*
@@ -88,15 +135,22 @@ public class FileUpload extends HttpServlet {
 		
 		2) 파일일 경우
 		-------------akhrfalweitg1245 ==> Part를 구분하는 구분선
-		content-disposition : form-data; name="upFile1"; filename="test.txt" 	==> 파일 정보
-		content-type : text/plain		==> 파일의 종류
+		content-disposition: form-data; name="upFile1"; filename="test.txt" 	==> 파일 정보
+		content-type: text/plain		==> 파일의 종류
 						==> 빈줄
 		12345abcd안녕 	==> 파일의 내용
 	*/
-	
-	// Part구조 안에서 전송된 실제 파일명 찾는 메서드
+	// Part구조 안에서 전송된 파일의 실제 파일명 찾는 메서드
 	private String extractFileName(Part part) {
 		String filename = "";
+		String contentDisposition = part.getHeader("content-disposition");
+		String[] items = contentDisposition.split(";"); 
+		for(String item : items) {
+			if(item.trim().startsWith("filename")) {
+				filename = item.substring(item.indexOf("=")+2,item.length()-1);
+			}
+		}
+		
 		return filename;
 	}
 

@@ -13,8 +13,8 @@
 		insert into fileinfo 
 			(file_no, file_writer, origin_file_name, 
 			 save_file_name, file_size, file_date)
-		values(#file_no#, #file_writer#, #origin_file_name#, 
-			   #save_file_name#, #file_size#, #file_date#)
+		values(FILEINFO_SEQ.nextval, #file_writer#, #origin_file_name#, 
+			   #save_file_name#, #file_size#, sysdate)
 	</insert>
 
 
