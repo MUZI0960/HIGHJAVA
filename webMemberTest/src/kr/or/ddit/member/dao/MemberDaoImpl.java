@@ -37,13 +37,13 @@ public class MemberDaoImpl implements IMemberDao {
 	}
 
 	@Override
-	public String memberAdd(MemberVO vo) {
-		String cnt = null;
+	public int memberAdd(MemberVO vo) {
+		int cnt = 0;
 		
 		try {
-			cnt = (String) smc.insert("member.memberAdd");
+			Object obj = smc.insert("member.memberAdd", vo);
+			if(obj==null) cnt = 1;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

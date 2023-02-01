@@ -21,7 +21,7 @@ $(function(){
 		$.ajax({
 			
 			url : '<%=request.getContextPath()%>/member/memberAdd.do',
-			type : 'get',
+			type : 'post',
 			data : {	"id" : id,
 						"pass" : pass,
 						"name" : name,
@@ -55,7 +55,7 @@ table{
 </head>
 <body>
 
-<form action="<%=request.getContextPath()%>/member/memberAdd.do" method="get">
+<form action="<%=request.getContextPath()%>/member/memberAdd.do" method="post">
 <table border="1">
 
 <tr>

@@ -28,7 +28,7 @@ public class MemberServiceImpl implements IMemberService {
 	}
 
 	@Override
-	public String memberAdd(MemberVO vo) {
+	public int memberAdd(MemberVO vo) {
 		return dao.memberAdd(vo);
 	}
 

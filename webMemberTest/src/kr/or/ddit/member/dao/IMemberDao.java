@@ -8,7 +8,7 @@ public interface IMemberDao {
 
 	public List<MemberVO> memberAllList();
 	
-	public String memberAdd(MemberVO vo);
+	public int memberAdd(MemberVO vo);
 	
 	
 }

@@ -14,8 +14,8 @@
 	</select>
 
 	<insert id="memberAdd" parameterClass="memberVo">
-		insert into mymember
-		values(#mem_id#, #mem_pass#, #mem_name#, #mem_tel#, #mem_addr#, #mem_photo#)
+		insert into mymember (mem_id, mem_pass, mem_name, mem_tel, mem_addr)
+		values(#mem_id#, #mem_pass#, #mem_name#, #mem_tel#, #mem_addr#)
 		
 	</insert>
 	
